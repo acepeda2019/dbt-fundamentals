@@ -20,21 +20,27 @@ sources:
         
         columns:
           - name: id
-            description: payment id, primary key of the payments table
+            data_type: bigint
+            description: '{{ doc("payment_id") }}'
             data_tests:
               - unique
               - not_null
           - name: orderid
-            description: order id, foreign key of the orders table
+            data_type: bigint
+            description: '{{ doc("order_id") }}'
           - name: paymentmethod
-            description: payment method of the transaction
+            data_type: string
+            description: '{{ doc("payment_method") }}'
           - name: status
-            description: status of the payment transaction
+            data_type: string
+            description: '{{ doc("payment_status") }}'
             data_tests:
               - accepted_values:
                   arguments:
                     values: ['fail', 'success']
           - name: amount
+            data_type: bigint
             description: USD amount without the decimal
           - name: created
+            data_type: timestamp
             description: creation date of the payment transaction

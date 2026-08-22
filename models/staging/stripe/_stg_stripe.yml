@@ -1,0 +1,26 @@
+version: 2
+
+models:
+  - name: stg_stripe__payments
+    description: Cleaned and renamed payment data from Stripe, with amounts converted from cents to dollars.
+    columns:
+      - name: payment_id
+        data_type: bigint
+        description: '{{ doc("payment_id") }}'
+
+      - name: order_id
+        data_type: bigint
+        description: '{{ doc("order_id") }}'
+
+      - name: payment_method
+        data_type: string
+        description: '{{ doc("payment_method") }}'
+
+      - name: payment_status
+        data_type: string
+        description: '{{ doc("payment_status") }}'
+
+      - name: amount
+        data_type: double
+        description: The payment amount in USD dollars, converted from the cent-denominated `amount` column in the raw source table.
+

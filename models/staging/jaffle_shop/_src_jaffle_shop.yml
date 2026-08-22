@@ -9,11 +9,14 @@ sources:
         description: Raw customer data
         columns:
           - name: id
-            description: Customer ID
+            data_type: bigint
+            description: '{{ doc("customer_id") }}'
           - name: first_name
-            description: Customer first name
+            data_type: string
+            description: '{{ doc("customer_first_name") }}'
           - name: last_name
-            description: Customer last name
+            data_type: string
+            description: '{{ doc("customer_last_name") }}'
       - name: orders
         description: Raw order data
         config:
@@ -24,16 +27,20 @@ sources:
           
         columns:
           - name: id
-            description: Order ID, primary key of the orders table
+            data_type: bigint
+            description: '{{ doc("order_id") }}'
             data_tests:
               - unique
               - not_null
           - name: user_id
-            description: Customer user id, foreign key to the customers table
+            data_type: bigint
+            description: '{{ doc("customer_id") }}'
           - name: order_date
-            description: Order date
+            data_type: date
+            description: '{{ doc("order_date") }}'
           - name: status
-            description: the status of the order
+            data_type: string
+            description: '{{ doc("order_status") }}'
             data_tests:
               - accepted_values:
                   arguments:
