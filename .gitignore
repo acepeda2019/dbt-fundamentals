@@ -1,5 +1,6 @@
 dbt_packages/
 dbt_internal_packages/
+data/
 logs/
 target/
 .env
