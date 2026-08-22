@@ -1,0 +1,40 @@
+sources:
+  - name: stripe
+    database: raw
+    schema: stripe
+    description: Stripe data
+
+    tables:
+      - name: payments
+        description: >
+            This table contains payment transaction records processed through the payment system. 
+            It includes details such as the order associated with each payment, the payment method used, 
+            the status of the payment, the payment amount, and the date the payment was created. 
+            It can be used for financial reporting, tracking payment statuses, and analyzing payment methods trends.
+        config:
+          freshness:
+            warn_after: {count: 3, period: day}
+            error_after: {count: 3, period: day}
+          loaded_at_field: 'created::timestamp'
+
+        
+        columns:
+          - name: id
+            description: payment id, primary key of the payments table
+            data_tests:
+              - unique
+              - not_null
+          - name: orderid
+            description: order id, foreign key of the orders table
+          - name: paymentmethod
+            description: payment method of the transaction
+          - name: status
+            description: status of the payment transaction
+            data_tests:
+              - accepted_values:
+                  arguments:
+                    values: ['fail', 'success']
+          - name: amount
+            description: USD amount without the decimal
+          - name: created
+            description: creation date of the payment transaction

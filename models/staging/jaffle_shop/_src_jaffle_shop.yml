@@ -1,0 +1,40 @@
+sources:
+  - name: jaffle_shop
+    database: raw
+    schema: jaffle_shop
+    description: Jaffle Shop data
+
+    tables:
+      - name: customers
+        description: Raw customer data
+        columns:
+          - name: id
+            description: Customer ID
+          - name: first_name
+            description: Customer first name
+          - name: last_name
+            description: Customer last name
+      - name: orders
+        description: Raw order data
+        config:
+          freshness:
+            warn_after: {count: 1, period: day}
+            error_after: {count: 3, period: day}
+          loaded_at_field: 'order_date::timestamp'
+          
+        columns:
+          - name: id
+            description: Order ID, primary key of the orders table
+            data_tests:
+              - unique
+              - not_null
+          - name: user_id
+            description: Customer user id, foreign key to the customers table
+          - name: order_date
+            description: Order date
+          - name: status
+            description: the status of the order
+            data_tests:
+              - accepted_values:
+                  arguments:
+                    values: ['completed', 'placed', 'return_pending', 'returned', 'shipped']
