@@ -22,7 +22,7 @@ models:
 
       - name: lifetime_value
         data_type: double
-        description: The total amount of successful payments associated with the order, summed from `stg_stripe__payments`.
+        description: '{{ doc("lifetime_value") }}'
 
   - name: dim_customers
     description: One row per customer, enriched with order history metrics such as first order date, most recent order date, and total number of orders.
@@ -50,4 +50,7 @@ models:
       - name: number_of_orders
         data_type: bigint
         description: The total number of orders placed by the customer. Zero if the customer has not placed any orders.
-
+      
+      - name: lifetime_value
+        data_type: double
+        description: '{{ doc("lifetime_value") }}'

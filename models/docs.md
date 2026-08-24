@@ -42,3 +42,8 @@ gift card, or coupon.
 {% docs payment_status %}
 The status of the payment transaction: `success` or `fail`.
 {% enddocs %}
+
+
+{% docs lifetime_value %}
+The total amount of successful payments associated with the order, summed from `stg_stripe__payments`.
+{% enddocs %}
