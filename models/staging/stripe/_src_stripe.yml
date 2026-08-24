@@ -42,5 +42,5 @@ sources:
             data_type: bigint
             description: USD amount without the decimal
           - name: created
-            data_type: timestamp
+            data_type: date
             description: creation date of the payment transaction
