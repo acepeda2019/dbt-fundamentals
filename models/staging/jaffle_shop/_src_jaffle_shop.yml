@@ -11,6 +11,9 @@ sources:
           - name: id
             data_type: bigint
             description: '{{ doc("customer_id") }}'
+            data_tests:
+              - unique
+              - not_null
           - name: first_name
             data_type: string
             description: '{{ doc("customer_first_name") }}'
