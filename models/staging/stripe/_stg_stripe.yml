@@ -7,6 +7,9 @@ models:
       - name: payment_id
         data_type: bigint
         description: '{{ doc("payment_id") }}'
+        data_tests:
+          - unique
+          - not_null
 
       - name: order_id
         data_type: bigint
