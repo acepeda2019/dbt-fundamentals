@@ -36,5 +36,16 @@ models:
   jaffle_shop:
     staging:
       +materialized: view
+      +static_analysis: strict
+    intermediate:
+      +materialized: view
+      +static_analysis: strict
     marts:
       +materialized: table
+      +static_analysis: strict
+
+flags:
+  warn_error_options:
+    silence:
+      - PackageMissingProjectFile
+      - UnusedResourceConfigPath
