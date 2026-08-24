@@ -15,7 +15,7 @@ final as (
         o.order_status,
         sum(p.amount) as lifetime_value
     from orders o 
-        left join payments p on o.order_id = p.payment_id
+        left join payments p on o.order_id = p.order_id
     group by 1,2,3,4
 )
 
