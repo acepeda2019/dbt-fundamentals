@@ -1,3 +1,12 @@
+{{ 
+    config(
+        materialized='incremental',
+        incremental_strategy='merge',
+        unique_key='order_id',
+        on_schema_change='fail'
+    )
+}}
+
 with orders as (
     select * from {{ ref('stg_jaffle_shop__orders') }}
 ),
@@ -20,3 +29,6 @@ final as (
 )
 
 select * from final
+{% if is_incremental() -%}
+where order_date >= (select coalesce( date_add(max(order_date), -3), '2020-01-01' ) from {{this}})
+{%- endif %}

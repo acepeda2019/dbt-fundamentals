@@ -3,10 +3,14 @@ version: 2
 models:
   - name: fct_orders
     description: One row per order, enriched with the total amount of successful payments (lifetime value) associated with it.
+
     columns:
       - name: order_id
         data_type: bigint
         description: '{{ doc("order_id") }}'
+        data_tests:
+          - unique
+          - not_null
 
       - name: customer_id
         data_type: bigint
@@ -24,12 +28,18 @@ models:
         data_type: double
         description: '{{ doc("lifetime_value") }}'
 
+
   - name: dim_customers
     description: One row per customer, enriched with order history metrics such as first order date, most recent order date, and total number of orders.
+    latest_version: 2
+
     columns:
       - name: customer_id
         data_type: bigint
         description: '{{ doc("customer_id") }}'
+        data_tests:
+          - unique
+          - not_null
 
       - name: first_name
         data_type: string
@@ -51,6 +61,24 @@ models:
         data_type: bigint
         description: The total number of orders placed by the customer. Zero if the customer has not placed any orders.
       
-      - name: lifetime_value
-        data_type: double
-        description: '{{ doc("lifetime_value") }}'
+
+
+    versions:
+      - v: 1
+        deprecation_date: 2026-01-01
+
+      - v: 2
+        columns:
+          - include: all
+
+          - name: employee_id
+            data_type: bigint
+            description: unique identifier of an employee
+            data_tests:
+              - relationships:
+                  to: ref('employees')
+                  field: employee_id
+
+          - name: lifetime_value
+            data_type: double
+            description: '{{ doc("lifetime_value") }}'

@@ -5,3 +5,5 @@ logs/
 target/
 .env
 .DS_Store
+.bruin.yml
+analysis/sandbox.sql
