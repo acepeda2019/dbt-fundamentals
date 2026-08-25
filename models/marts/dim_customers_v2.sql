@@ -6,6 +6,11 @@ orders as (
     select * from {{ ref('fct_orders') }} 
 ),
 
+employees as (
+    select *
+    from {{ ref('employees') }}
+),
+
 customer_orders as (
 
     select
@@ -27,6 +32,7 @@ final as (
 
     select
         customers.customer_id,
+        employees.employee_id,
         customers.first_name,
         customers.last_name,
         customer_orders.first_order_date,
@@ -40,7 +46,9 @@ final as (
 
     from customers
 
-    left join customer_orders using (customer_id)
+    left join customer_orders on customers.customer_id = customer_orders.customer_id
+
+    left join employees on customers.customer_id = employees.customer_id
 
 )
 
