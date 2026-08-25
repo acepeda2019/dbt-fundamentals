@@ -1,0 +1,13 @@
+seeds:
+  - name: employees
+    description: mapping table for customers who are also employees
+    columns:
+      - name: employee_id
+        description: unique identifier of employee
+        data_tests:
+          - unique
+          - not_null
+      - name: email
+        description: work email address of employee
+      - name: customer_id
+        description: unique identifier of customer
