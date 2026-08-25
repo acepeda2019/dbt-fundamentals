@@ -22,5 +22,6 @@ group by 1,2,3,4
 select sum(lifetime_value) from final; #}
 
 
-select distinct order_status from {{ ref('fct_orders' )}}
+{# select distinct order_status from {{ ref('fct_orders' )}} #}
+
 
