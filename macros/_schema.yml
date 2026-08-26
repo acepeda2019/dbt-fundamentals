@@ -1,0 +1,10 @@
+macros:
+  - name: cents_to_dollars
+    description: converts cents to dollars and round to the nearest decimal specified
+    arguments:
+      - name: column_name
+        description: the column name of the cents column to convert
+        type: integer
+      - name: decimal
+        description: decimal value to round to, default is set to 2
+        type: integer

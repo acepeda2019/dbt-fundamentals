@@ -66,6 +66,8 @@ models:
     versions:
       - v: 1
         deprecation_date: 2026-01-01
+        config:
+          enabled: false
 
       - v: 2
         columns:

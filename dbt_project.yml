@@ -34,16 +34,28 @@ clean-targets:         # directories to be removed by `dbt clean`
 
 models:
   jaffle_shop:
+    +database: analytics
     staging:
+      +schema: staging
       +materialized: view
       +static_analysis: strict
     intermediate:
+      +schema: intermediate
       +materialized: view
       +static_analysis: strict
     marts:
+      +schema: marts
       +materialized: table
       +static_analysis: strict
 
+seeds:
+  jaffle_shop:
+    +schema: seeds
+
+functions:
+  jaffle_shop:
+    +schema: functions
+    
 flags:
   warn_error_options:
     silence:
