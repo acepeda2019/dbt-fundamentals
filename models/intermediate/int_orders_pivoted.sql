@@ -1,5 +1,17 @@
-{% set order_statuses = ['completed','placed','return_pending','returned','shipped'] %}
+{# {% set order_statuses = ['completed','placed','return_pending','returned','shipped'] %} #}
 
+-- Dynamically get distinct order statuses
+{% set distinct_status_query %}
+    select distinct order_status from {{ ref('stg_jaffle_shop__orders') }} order by 1
+{% endset %}
+
+{% set results = run_query(distinct_status_query) %}
+
+{% if execute %}
+    {% set order_statuses = results.columns[0].values() %}
+{% else %}
+    {% set order_statuses = [] %}
+{% endif %}
 
 with orders as (
     select * from {{ ref('stg_jaffle_shop__orders') }}
