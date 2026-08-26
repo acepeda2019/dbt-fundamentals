@@ -8,3 +8,15 @@ macros:
       - name: decimal
         description: decimal value to round to, default is set to 2
         type: integer
+  
+  - name: union_table_by_prefix
+    description: unions all tables withing a schema containing a given prefix. column names must match across all tables
+    arguments:
+      - name: database
+        description: the name of the database
+      - name: schema
+        description: the name of the schema
+      - name: prefix
+        description: the prefix of the model names to search
+      - name: columns
+        description: list of columns used in the union. default is ['*']
