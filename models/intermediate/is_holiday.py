@@ -5,7 +5,8 @@ from pandas.tseries.holiday import USFederalHolidayCalendar
 def model(dbt, session):
     dbt.config(
         materialized='table',
-        submission_method='serverless_cluster'
+        submission_method='serverless_cluster',
+        static_analysis='off'
     )
 
     df = dbt.ref('date_spine').toPandas()
