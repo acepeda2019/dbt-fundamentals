@@ -3,11 +3,17 @@ version: 2
 models:
   - name: fct_orders
     description: One row per order, enriched with the total amount of successful payments (lifetime value) associated with it.
+    config:
+      contract:
+        enforced: true
 
     columns:
       - name: order_id
         data_type: bigint
         description: '{{ doc("order_id") }}'
+        constraints:
+          - type: not_null
+          - type: primary_key
         data_tests:
           - unique
           - not_null
@@ -32,11 +38,19 @@ models:
   - name: dim_customers
     description: One row per customer, enriched with order history metrics such as first order date, most recent order date, and total number of orders.
     latest_version: 2
+    config:
+      contract:
+          enforced: true
 
     columns:
       - name: customer_id
         data_type: bigint
         description: '{{ doc("customer_id") }}'
+        constraints:
+          - type: not_null
+          - type: primary_key
+          - type: check
+            expression: 'customer_id > 0' 
         data_tests:
           - unique
           - not_null
@@ -84,3 +98,7 @@ models:
           - name: lifetime_value
             data_type: double
             description: '{{ doc("lifetime_value") }}'
+
+          - name: average_order_value
+            data_type: double
+            description: the average lifetime value / number of total order by customer
