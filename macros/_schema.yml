@@ -20,3 +20,16 @@ macros:
         description: the prefix of the model names to search
       - name: columns
         description: list of columns used in the union. default is ['*']
+
+  - name: find_orphaned_tables
+    description: >
+      Compares the warehouse's information_schema against the dbt manifest (graph.nodes) to find
+      tables/views that exist in the given database but aren't defined by any enabled model,
+      snapshot, or seed in the project. Logs a DROP statement for each orphan found - it only
+      reports, it never executes anything - so the statements are meant to be reviewed and run
+      manually to clear out stale objects (e.g. from renamed/removed models) from prod.
+    arguments:
+      - name: database
+        description: the name of the database/catalog to audit. default is 'analytics'
+      - name: schemas
+        description: list of schemas to check. default is ['intermediate','snapshots','seeds','staging','marts']
