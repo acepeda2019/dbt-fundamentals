@@ -1,0 +1,38 @@
+name: dbt publish manifest
+
+# Builds main's manifest.json and stores it as a workflow artifact so PR CI
+# (dbt-slim-ci.yml) can download it and diff against it via `--state`.
+on:
+  push:
+    branches: [main]
+
+jobs:
+  publish-manifest:
+    runs-on: ubuntu-latest
+    env:
+      DBT_PROFILES_DIR: ${{ github.workspace }}/ci
+      DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+      DATABRICKS_HTTP_PATH: ${{ secrets.DATABRICKS_HTTP_PATH }}
+      DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      # NOTE: dbt Fusion is a preview binary distributed via this installer, not pip.
+      # Confirmed against the CDN host embedded in the locally installed binary
+      # (public.cdn.getdbt.com/fs) but has not been exercised in CI before now —
+      # watch the first run for install or license/trial-activation failures.
+      - name: Install dbt (Fusion)
+        run: curl -fsSL https://public.cdn.getdbt.com/fs/install/install.sh | sh
+      - run: echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: dbt deps
+        run: dbt deps
+
+      - name: Generate manifest
+        run: dbt parse --target-path ./target
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: main-manifest
+          path: target/manifest.json
+          retention-days: 30
