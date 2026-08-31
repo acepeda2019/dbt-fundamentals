@@ -11,7 +11,10 @@ packages:
   - name: dbt_expectations
     package: metaplane/dbt_expectations
     version: 0.10.10
+  - name: dbt_meta_testing
+    package: tnightengale/dbt_meta_testing
+    version: 0.4.0
   - name: dbt_date
     package: godatadriven/dbt_date
     version: 0.21.0
-sha1_hash: 3b93307015f9b8b0285b732e5bba0b60cb6348b8
+sha1_hash: f878f4ebc40a63a1668c4af59aa0796fcd73897c
