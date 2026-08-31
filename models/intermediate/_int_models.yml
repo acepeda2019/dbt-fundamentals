@@ -5,7 +5,7 @@ models:
     description: A daily date spine spanning from 2019-01-01 through the end of two years from now, used as a calendar backbone for other intermediate models.
     columns:
       - name: date_day
-        data_type: date
+        data_type: timestamp
         description: A single calendar day in the date spine.
         data_tests:
           - unique
