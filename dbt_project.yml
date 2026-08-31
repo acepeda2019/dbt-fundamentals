@@ -59,7 +59,10 @@ seeds:
 functions:
   jaffle_shop:
     +schema: functions
-    
+
+data_tests:
+  +store_failures: true
+  
 flags:
   warn_error_options:
     silence:
