@@ -62,8 +62,10 @@ jobs:
 
       - name: Check required_tests
         if: steps.modified.outputs.models != ''
-        run: dbt run-operation required_tests --args "{'models': '${{ steps.modified.outputs.models }}'}"
+        run: |
+          dbt run-operation required_tests --args "{'models': '${{ steps.modified.outputs.models }}'}"
 
       - name: Check required_docs
         if: steps.modified.outputs.models != ''
-        run: dbt run-operation required_docs --args "{'models': '${{ steps.modified.outputs.models }}'}"
+        run: |
+          dbt run-operation required_docs --args "{'models': '${{ steps.modified.outputs.models }}'}"
