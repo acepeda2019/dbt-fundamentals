@@ -1,0 +1,56 @@
+version: 2
+
+models:
+  - name: date_spine
+    description: A daily date spine spanning from 2019-01-01 through the end of two years from now, used as a calendar backbone for other intermediate models.
+    columns:
+      - name: date_day
+        data_type: date
+        description: A single calendar day in the date spine.
+        data_tests:
+          - unique
+          - not_null
+
+  - name: int_orders_pivoted
+    description: Orders pivoted so that each order date has one column per order status, containing the total amount of successful payments associated with orders in that status.
+    columns:
+      - name: order_date
+        data_type: date
+        description: '{{ doc("order_date") }}'
+        data_tests:
+          - unique
+          - not_null
+
+      - name: completed
+        data_type: double
+        description: Total amount of successful payments for orders placed on this date that are in `completed` status.
+
+      - name: placed
+        data_type: double
+        description: Total amount of successful payments for orders placed on this date that are in `placed` status.
+
+      - name: return_pending
+        data_type: double
+        description: Total amount of successful payments for orders placed on this date that are in `return_pending` status.
+
+      - name: returned
+        data_type: double
+        description: Total amount of successful payments for orders placed on this date that are in `returned` status.
+
+      - name: shipped
+        data_type: double
+        description: Total amount of successful payments for orders placed on this date that are in `shipped` status.
+
+  - name: is_holiday
+    description: The date spine enriched with a flag indicating whether each date is a recognized US federal holiday.
+    columns:
+      - name: date_day
+        data_type: date
+        description: A single calendar day in the date spine.
+        data_tests:
+          - unique
+          - not_null
+
+      - name: is_holiday
+        data_type: boolean
+        description: True if the date is a recognized US federal holiday, false otherwise.
