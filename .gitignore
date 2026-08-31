@@ -3,6 +3,7 @@ dbt_internal_packages/
 data/
 logs/
 target/
+state_baseline/
 .env
 .DS_Store
 .bruin.yml

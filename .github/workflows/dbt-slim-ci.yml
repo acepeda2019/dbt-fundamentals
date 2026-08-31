@@ -1,0 +1,71 @@
+name: dbt slim CI
+
+# On every PR: build only the models affected by this branch (state:modified+),
+# diffed against the manifest published from main by dbt-publish-manifest.yml,
+# then re-run the required_tests / required_docs checks against just those models.
+on:
+  pull_request:
+
+jobs:
+  slim-ci:
+    runs-on: ubuntu-latest
+    env:
+      DBT_PROFILES_DIR: ${{ github.workspace }}/ci
+      DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+      DATABRICKS_HTTP_PATH: ${{ secrets.DATABRICKS_HTTP_PATH }}
+      DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dbt (Fusion)
+        run: curl -fsSL https://public.cdn.getdbt.com/fs/install/install.sh | sh
+      - run: echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: dbt deps
+        run: dbt deps
+
+      # Pulls the most recent manifest published from main. On the very first PR
+      # after this workflow is added there won't be one yet (dbt-publish-manifest.yml
+      # only runs on push to main) — this step is allowed to fail and the build
+      # falls back to running everything.
+      - name: Download main's manifest
+        id: download-manifest
+        uses: dawidd6/action-download-artifact@v6
+        continue-on-error: true
+        with:
+          workflow: dbt-publish-manifest.yml
+          branch: main
+          name: main-manifest
+          path: state_baseline
+
+      - name: Resolve modified models
+        id: modified
+        run: |
+          if [ "${{ steps.download-manifest.outcome }}" = "success" ]; then
+            SELECTOR="state:modified+"
+            STATE_ARGS="--state ./state_baseline"
+          else
+            echo "No baseline manifest found — building all models."
+            SELECTOR="*"
+            STATE_ARGS=""
+          fi
+          echo "selector=$SELECTOR" >> "$GITHUB_OUTPUT"
+          echo "state_args=$STATE_ARGS" >> "$GITHUB_OUTPUT"
+          MODELS=$(dbt -q list --resource-type model -s "$SELECTOR" $STATE_ARGS)
+          echo "models<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$MODELS" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
+      - name: Build modified models
+        if: steps.modified.outputs.models != ''
+        run: dbt build -s "${{ steps.modified.outputs.selector }}" ${{ steps.modified.outputs.state_args }}
+
+      - name: Check required_tests
+        if: steps.modified.outputs.models != ''
+        run: |
+          dbt run-operation required_tests --args "{'models': '${{ steps.modified.outputs.models }}'}"
+
+      - name: Check required_docs
+        if: steps.modified.outputs.models != ''
+        run: |
+          dbt run-operation required_docs --args "{'models': '${{ steps.modified.outputs.models }}'}"
