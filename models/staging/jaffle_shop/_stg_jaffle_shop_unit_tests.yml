@@ -1,0 +1,40 @@
+unit_tests:
+  - name: test_order_status_clean_up
+    description: test my status ase when logic
+    model: stg_jaffle_shop__orders
+    given:
+      - input: source('jaffle_shop','orders')
+        format: dict
+        rows:
+          - { id: 1, status: returned }
+          - { id: 2, status: completed }
+          - { id: 3, status: return_pending }
+          - { id: 4, status: shipped }
+          - { id: 5, status: placed }
+    expect:
+      format: dict
+      rows:
+          - { order_id: 1, order_status: returned }
+          - { order_id: 2, order_status: completed }
+          - { order_id: 3, order_status: returned }
+          - { order_id: 4, order_status: shipped }
+          - { order_id: 5, order_status: placed }   
+  
+  - name: test_days_since_last_order
+    description: test the days since last order function
+    model: stg_jaffle_shop__orders
+    overrides:
+      macros:
+        dbt.current_timestamp: "'2026-01-01'"
+    given:
+      - input: source('jaffle_shop', 'orders')
+        format: dict
+        rows:
+          - { id: 1, order_date: 2025-10-01 }
+          - { id: 2, order_date: 2025-12-31 }
+    expect:
+      format: dict
+      rows:
+          - { order_id: 1, days_since_last_order: 92 }
+          - { order_id: 2, days_since_last_order: 1 }
+          

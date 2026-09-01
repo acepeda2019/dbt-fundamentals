@@ -65,3 +65,6 @@ flags:
     silence:
       - PackageMissingProjectFile
       - UnusedResourceConfigPath
+
+unit_tests:
+  +enabled: "{{ var('dbt_env', 'dev') != 'prod' }}"
