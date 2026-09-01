@@ -59,5 +59,5 @@ models:
                 values: ['completed', 'returned', 'placed', 'shipped']
 
       - name: days_since_last_order
-        data_type: bigint
+        data_type: int
         description: The number of days between the order date and the current timestamp.
