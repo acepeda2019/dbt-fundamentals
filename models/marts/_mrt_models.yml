@@ -93,8 +93,9 @@ models:
             description: unique identifier of an employee
             data_tests:
               - relationships:
-                  to: ref('employees')
-                  field: employee_id
+                  arguments:
+                    to: ref('employees')
+                    field: employee_id
 
           - name: lifetime_value
             data_type: double
