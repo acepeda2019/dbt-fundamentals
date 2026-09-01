@@ -46,10 +46,18 @@ models:
         data_type: date
         description: '{{ doc("order_date") }}'
 
+      - name: order_status_raw
+        data_type: string
+        description: The order status exactly as it appears in the raw source data, before cleanup.
+
       - name: order_status
         data_type: string
-        description: '{{ doc("order_status") }}'
+        description: '{{ doc("order_status") }} Cleaned up from `order_status_raw`: any value containing `return` becomes `returned`, and any value containing `pending` becomes `placed`.'
         data_tests:
           - accepted_values:
               arguments:
-                values: ['completed', 'returned', 'return_pending', 'placed', 'shipped']
+                values: ['completed', 'returned', 'placed', 'shipped']
+
+      - name: days_since_last_order
+        data_type: bigint
+        description: The number of days between the order date and the current timestamp.
