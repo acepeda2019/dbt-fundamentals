@@ -14,6 +14,7 @@ models:
         constraints:
           - type: not_null
           - type: primary_key
+            name: pk_fct_orders_order_id
         data_tests:
           - unique
           - not_null
@@ -50,8 +51,10 @@ models:
         constraints:
           - type: not_null
           - type: primary_key
+            name: pk_dim_customers_customer_id
           - type: check
-            expression: 'customer_id > 0' 
+            expression: 'customer_id > 0'
+            name: chk_dim_customers_customer_id_positive
         data_tests:
           - unique
           - not_null
