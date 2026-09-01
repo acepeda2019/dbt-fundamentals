@@ -33,3 +33,21 @@ macros:
         description: the name of the database/catalog to audit. default is 'analytics'
       - name: schemas
         description: list of schemas to check. default is ['intermediate','snapshots','seeds','staging','marts']
+
+  - name: find_datatypes
+    description: >
+      Given a single relation, queries its live columns via adapter.get_columns_in_relation and
+      renders each one as a `- name: ... / data_type: ...` yml entry (lowercased). Meant as a
+      codegen helper for pasting a model's `columns:` block into a schema.yml.
+    arguments:
+      - name: model
+        description: the relation to introspect, e.g. ref('some_model') or source('some_source', 'some_table')
+
+  - name: find_all_datatypes
+    description: >
+      Loops every enabled model/snapshot/seed (non-ephemeral) in the manifest, resolves each one's
+      real relation for the current target, and queries its live columns via
+      adapter.get_columns_in_relation - so it reflects whatever's actually built in the
+      environment you run it against (--target dev vs --target prod), not just what's documented
+      in yml. Logs a name/data-type listing per table, indented under the table name, to help spot
+      undocumented columns that still need to be filled in.
