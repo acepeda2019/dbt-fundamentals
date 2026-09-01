@@ -37,4 +37,14 @@ unit_tests:
       rows:
           - { order_id: 1, days_since_last_order: 92 }
           - { order_id: 2, days_since_last_order: 1 }
-          
+    
+  - name: test_full_name
+    description: test names are all lower case and joined with spaces
+    model: stg_jaffle_shop__customers
+    given:
+      - input: source('jaffle_shop', 'customers' )
+        format: csv
+        fixture: test_full_name_input
+    expect:
+      format: csv
+      fixture: test_full_name_expected
