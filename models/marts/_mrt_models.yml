@@ -33,7 +33,8 @@ models:
       - name: lifetime_value
         data_type: double
         description: '{{ doc("lifetime_value") }}'
-
+        data_tests:
+          - greater_than_zero
 
   - name: dim_customers
     description: One row per customer, enriched with order history metrics such as first order date, most recent order date, and total number of orders.
