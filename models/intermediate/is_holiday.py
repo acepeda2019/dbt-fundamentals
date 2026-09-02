@@ -6,7 +6,8 @@ def model(dbt, session):
     dbt.config(
         materialized='table',
         submission_method='serverless_cluster',
-        static_analysis='off'
+        static_analysis='off',
+        timeout=1800
     )
 
     df = dbt.ref('date_spine').toPandas()
