@@ -29,6 +29,6 @@ final as (
 )
 
 select * from final
-{% if is_incremental() -%}
-where order_date >= (select coalesce( date_add(max(order_date), -3), '2020-01-01' ) from {{this}})
-{%- endif %}
+
+where 1=1
+    {{ incremental_lookback('order_date') }}
