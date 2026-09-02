@@ -38,4 +38,5 @@ pivoted as (
 
 select *
 from pivoted
+where {{ date_window('order_date') }}
 

@@ -52,13 +52,24 @@ macros:
       in yml. Logs a name/data-type listing per table, indented under the table name, to help spot
       undocumented columns that still need to be filled in.
 
-  - name: incremental_lookback
+  - name: date_window
     description: >
-      Returns the incremental lookback date for a given column.
+      Returns a boolean date-filter predicate (no leading `and`) for a WHERE clause, chosen based
+      on how the model is being built. In `dev`, always filters to the last `lookback_days` from
+      current_date, regardless of incremental state - this caps dev build volume/cost and never
+      references `{{ this }}`, so it's safe on a full-refresh/first build. Outside `dev`, only
+      filters when `is_incremental()` is true, using `max(column_name) from {{ this }}` as the
+      anchor - this is the classic incremental-merge lookback window for catching late-arriving
+      data. Outside `dev` on a full build/first run, neither branch fires and no filter is applied,
+      so the full history builds. `lookback_days` defaults to the `lookback_days` dbt var (falling
+      back to 3500) if not passed explicitly, so it can be overridden per-invocation via
+      `--vars '{"lookback_days": N}'` without touching the model.
     arguments:
       - name: column_name
-        description: the column name to look back from
+        description: the column name to filter on
       - name: lookback_days
-        description: the number of days to look back
+        description: >
+          number of days to look back. Defaults to `var('lookback_days', 3500)` if not passed -
+          override via `--vars '{"lookback_days": N}'`
       - name: default_date
-        description: the default date to return if the column is not found
+        description: fallback date (non-dev, incremental) when {{ this }} has no rows yet

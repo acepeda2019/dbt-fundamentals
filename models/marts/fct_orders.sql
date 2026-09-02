@@ -29,6 +29,5 @@ final as (
 )
 
 select * from final
-
-where 1=1
-    {{ incremental_lookback('order_date') }}
+where 1=1 
+    and {{ date_window('order_date') }}
