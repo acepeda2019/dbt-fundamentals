@@ -6,6 +6,10 @@ snapshots:
       schema: snapshots
       strategy: check
       unique_key: id
-      check_cols: ['id','user_id','order_date','status']
+      check_cols:
+        - ID
+        - USER_ID
+        - ORDER_DATE
+        - STATUS
       hard_deletes: ignore
        
