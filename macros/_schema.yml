@@ -51,3 +51,14 @@ macros:
       environment you run it against (--target dev vs --target prod), not just what's documented
       in yml. Logs a name/data-type listing per table, indented under the table name, to help spot
       undocumented columns that still need to be filled in.
+
+  - name: incremental_lookback
+    description: >
+      Returns the incremental lookback date for a given column.
+    arguments:
+      - name: column_name
+        description: the column name to look back from
+      - name: lookback_days
+        description: the number of days to look back
+      - name: default_date
+        description: the default date to return if the column is not found
