@@ -28,11 +28,17 @@ jobs:
       - name: dbt deps
         run: dbt deps
 
+      - name: Check Source Freshness
+        run: dbt source freshness --target-path ./target
+        continue-on-error: true # a stale source shouldn't block publishing manifest.json
+
       - name: Generate manifest
         run: dbt parse --target-path ./target
 
       - uses: actions/upload-artifact@v4
         with:
           name: main-manifest
-          path: target/manifest.json
+          path: |
+            target/manifest.json
+            target/sources.json
           retention-days: 30
