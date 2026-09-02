@@ -45,7 +45,7 @@ models:
     description: The date spine enriched with a flag indicating whether each date is a recognized US federal holiday.
     columns:
       - name: date_day
-        data_type: date
+        data_type: timestamp_ltz
         description: A single calendar day in the date spine.
         data_tests:
           - unique
