@@ -62,7 +62,9 @@ jobs:
 
       - name: Lint modified models
         if: steps.modified.outputs.paths != ''
-        run: dbt lint ${{ steps.modified.outputs.paths }}
+        env:
+          PATHS: ${{ steps.modified.outputs.paths }}
+        run: dbt lint $PATHS
 
       - name: Build modified models
         if: steps.modified.outputs.models != ''
