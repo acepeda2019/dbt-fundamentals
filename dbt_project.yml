@@ -28,7 +28,7 @@ clean-targets:                            # Specify a custom list of directories
     - "logs"
 
 
-require-dbt-version: ">=2.0.0"            # Restricts project to only work with range of dbt versions (package control)
+require-dbt-version: ">=1.0.0"            # Restricts project to only work with range of dbt versions (package control)
 
 models:
   jaffle_shop:
