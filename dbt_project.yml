@@ -1,73 +1,73 @@
+name: 'jaffle_shop'               # project name
+profile: 'dbt-fundamentals'       # profile to use in profiles.yml
 
-# Name your project! Project names should contain only lowercase characters
-# and underscores. A good package name should reflect your organization's
-# name or the intended use of these models
-name: 'jaffle_shop'
-version: '1.0.0'
-config-version: 2
+# OPTIONAL VERSION CONFIGS
+# version: 2
+# config-version: '2.0.0'
 
-# This setting configures which "profile" dbt uses for this project.
-profile: 'dbt-fundamentals'
-
-# These configurations specify where dbt should look for different types of files.
-# The `source-paths` config, for example, states that models in this project can be
-# found in the "models/" directory. You probably won't need to change these!
+# PATHS
 model-paths: ["models"]
-analysis-paths: ["analysis"]
-test-paths: ["tests"]
 seed-paths: ["seeds"]
+test-paths: ["tests"]
+analysis-paths: ["analysis"]
 macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
+function-paths: ["functions"]
 
-target-path: "target"  # directory which will store compiled SQL files
-clean-targets:         # directories to be removed by `dbt clean`
+# UNUSED PATHS
+# osi-paths: ['osi']                      # Apache Ossie Semantic Layer Docs
+# docs-paths: ['docs']                    # Optional: Custom place for doc blocks
+# asset-paths: ['assets']                 # Optional: Files included here will be available in target/ when running dbt docs generate for documentation
+# packages-install-path: ['packages']     # Optional: Custom Package Directory
+
+
+clean-targets:                            # Specify a custom list of directories to be removed by the dbt clean command
     - "target"
     - "dbt_modules"
+    - "dbt_packages"
+    - "logs"
 
 
-# Configuring models
-# Full documentation: https://docs.getdbt.com/docs/configuring-models
-
-# In this example config, we tell dbt to build all models in the jaffle_shop project
-# as tables. These settings can be overridden in the individual model files
-# using the `{{ config(...) }}` macro.
+require-dbt-version: ">=2.0.0"            # Restricts project to only work with range of dbt versions (package control)
 
 models:
   jaffle_shop:
     +database: analytics
     +meta:
-      required_tests: {"unique.*|not_null": 1}
-      required_docs: true
+        required_tests: {"unique.*|not_null": 1}
+        required_docs: true
 
     staging:
-      +schema: staging
-      +materialized: view
-      +static_analysis: strict
+        +schema: staging
+        +materialized: view
+        +static_analysis: strict
     intermediate:
-      +schema: intermediate
-      +materialized: view
-      +static_analysis: strict
+        +schema: intermediate
+        +materialized: table
+        +static_analysis: strict
     marts:
-      +schema: marts
-      +materialized: table
-      +static_analysis: strict
+        +schema: marts
+        +materialized: table
+        +static_analysis: strict
 
 seeds:
   jaffle_shop:
     +schema: seeds
 
 functions:
-  jaffle_shop:
-    +schema: functions
+    jaffle_shop:
+      +schema: functions
 
 data_tests:
   +store_failures: true
-  
-flags:
-  warn_error_options:
-    silence:
-      - PackageMissingProjectFile
-      - UnusedResourceConfigPath
 
 unit_tests:
   +enabled: "{{ var('dbt_env', 'dev') != 'prod' }}"
+
+flags:
+  warn_error_options:
+    error:
+    warn:   
+    silence:
+      - PackageMissingProjectFile
+      - UnusedResourceConfigPath
