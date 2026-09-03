@@ -55,6 +55,16 @@ jobs:
           echo "models<<EOF" >> "$GITHUB_OUTPUT"
           echo "$MODELS" >> "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"
+          PATHS=$(dbt -q list --resource-type model -s "$SELECTOR" $STATE_ARGS --output path)
+          echo "paths<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$PATHS" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
+      - name: Lint modified models
+        if: steps.modified.outputs.paths != ''
+        env:
+          PATHS: ${{ steps.modified.outputs.paths }}
+        run: dbt lint $PATHS
 
       - name: Build modified models
         if: steps.modified.outputs.models != ''

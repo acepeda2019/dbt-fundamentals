@@ -31,8 +31,8 @@ pivoted as (
             SUM(CASE WHEN order_status = '{{ status }}' THEN amount ELSE 0 END) as {{ status }}
             {%- if not loop.last -%} , {% endif %}
         {% endfor %}
-    from orders o
-        left join payments p on o.order_id = p.order_id
+    from orders as o
+        left join payments as p on o.order_id = p.order_id
     group by 1 order by 1 desc
 )
 
